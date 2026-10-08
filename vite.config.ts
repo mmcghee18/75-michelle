@@ -1,8 +1,8 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
 	plugins: [
 		sveltekit({
 			compilerOptions: {
@@ -11,10 +11,10 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 
-			// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-			// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-			// See https://svelte.dev/docs/kit/adapters for more information about adapters.
-			adapter: adapter()
+			// Static build into docs/ for GitHub Pages (main branch, /docs folder).
+			adapter: adapter({ pages: 'docs' }),
+			// Served from mmcghee18.github.io/75-michelle/ in production.
+			paths: { base: command === 'build' ? '/75-michelle' : '' }
 		})
 	]
-});
+}));
